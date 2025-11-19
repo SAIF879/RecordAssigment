@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -19,6 +21,12 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            // Network - Android
+            implementation(libs.ktor.client.android)
+            // Local Storage - Android
+            implementation(libs.sqldelight.android.driver)
+            // Coroutines - Android
+            implementation(libs.kotlinx.coroutines.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -29,6 +37,29 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
+            
+            // Network - Ktor (common)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+            
+            // Local Storage - SQLDelight (common)
+            implementation(libs.sqldelight.runtime)
+            
+            // Local Storage - Multiplatform Settings (simple key-value storage)
+            implementation(libs.multiplatform.settings)
+            
+            // Navigation - Voyager
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.transitions)
+            
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -67,3 +98,10 @@ dependencies {
     debugImplementation(compose.uiTooling)
 }
 
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("org.example.project.database")
+        }
+    }
+}
